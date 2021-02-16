@@ -15,41 +15,35 @@ import static com.salesforce.tests.fs.constants.Commands.*;
  * The entry point for the Test program
  */
 public class Main {
-
-    // I'm having problems to identify how hackerrank or this test is going to get the parameters
-    // the idea is to get the parameters, identify if second parameter is needed, like in mkdir or ls command
-    // and set the command and execute it
-
-    // the exceptions were created to show the message to the user but
-    // the messages can be in constants like the commands
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        String input = "";
-        String inputArg = "";
-
+        // initial structure for the Disk, commands and invoker
+        // initial path is "/root"
         Disk disk = new Disk();
         DirectoryCommand listCommand = new ListContentDirectoryCommand(disk);
         DirectoryInvoker invoker = new DirectoryInvoker();
 
         while (scanner.hasNext()) {
             boolean isExecutable = true;
-            input = scanner.nextLine();
+            String[] input = getInput(scanner.nextLine());
+            String command = input[0];
+            String parameter = null;
+            if (input.length > 1) {
+                parameter = input[1];
+            }
 
-            if (PWD.equals(input)) {
+            if (PWD.equals(command)) {
                 invoker.setCommand(new CurrentDirectoryCommand(disk));
-            } else if (LS.equals(input)) {
+            } else if (LS.equals(command)) {
                 invoker.setCommand(listCommand);
-            } else if (MKDIR.equals(input)) {
-                String dirName = ""; // get from scanner
-                invoker.setCommand(new CreateDirectoryCommand(disk, dirName));
-            } else if (TOUCH.equals(input)) {
-                String fileName = ""; // get from scanner
-                invoker.setCommand(new CreateFileCommand(disk, fileName));
-            } else if (CD.equals(input)) {
-                String to = ""; // get from scanner
-                invoker.setCommand(new ChangeDirectoryCommand(disk, to));
-            } else if (QUIT.equals(input)){
+            } else if (MKDIR.equals(command)) {
+                invoker.setCommand(new CreateDirectoryCommand(disk, parameter));
+            } else if (TOUCH.equals(command)) {
+                invoker.setCommand(new CreateFileCommand(disk, parameter));
+            } else if (CD.equals(command)) {
+                invoker.setCommand(new ChangeDirectoryCommand(disk, parameter));
+            } else if (QUIT.equals(command)){
                 break;
             }
             else {
@@ -67,5 +61,9 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    private static String[] getInput(String input) {
+        return input.split(" ");
     }
 }
