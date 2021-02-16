@@ -15,9 +15,9 @@ public class ListContentDirectoryCommand extends DirectoryCommand {
     public void execute() {
         for (Map.Entry<String, Directory> entry : disk.getDirectory().entrySet()) {
             if (entry.getKey().contains(disk.getPath())) {
-                System.out.println("dir: " + entry.getKey());
+                System.out.println(entry.getKey());
                 for (File f : entry.getValue().getFiles()) {
-                    System.out.println("file: " + entry.getKey() + "/" + f.getName());
+                    System.out.println(entry.getKey() + "/" + f.getName());
                 }
             }
         }
