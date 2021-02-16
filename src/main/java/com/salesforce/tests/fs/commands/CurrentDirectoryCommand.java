@@ -10,7 +10,7 @@ public class CurrentDirectoryCommand  extends DirectoryCommand {
     }
 
     @Override
-    public void execute() throws ExistingElementException, NameLengthException {
+    public void execute() {
         System.out.println(disk.getPath());
     }
 }
