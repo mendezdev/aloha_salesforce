@@ -18,17 +18,18 @@ public class CreateDirectoryCommand extends DirectoryCommand {
 
     @Override
     public void execute() throws ExistingElementException, InvalidParameterException, NameLengthException {
-        validate(this.name);
+        Directory currentDir = disk.getCurrentDirectory();
+        validate(currentDir, this.name);
+
         String fullPath = disk.getPath() + "/" + this.name;
-        disk.getCurrentDirectory().getDirectories()
-                .add(new Directory(fullPath, this.name));
+        currentDir.getDirectories().add(new Directory(fullPath, this.name));
     }
 
-    private void validate(String dirName) throws InvalidParameterException, ExistingElementException, NameLengthException {
+    private void validate(Directory directory, String dirName) throws InvalidParameterException, ExistingElementException, NameLengthException {
         if (dirName == null) {
             throw new InvalidParameterException("Invalid Command");
         }
-        if (existDirectory(dirName)) {
+        if (existDirectory(directory, dirName)) {
             throw new ExistingElementException("Directory already exists");
         }
         if (!isValidLength(dirName)) {
@@ -36,8 +37,8 @@ public class CreateDirectoryCommand extends DirectoryCommand {
         }
     }
 
-    private boolean existDirectory(String dirName) {
-        for (Directory d : disk.getCurrentDirectory().getDirectories()) {
+    private boolean existDirectory(Directory directory, String dirName) {
+        for (Directory d : directory.getDirectories()) {
             if (d.getName().equals(dirName)) {
                 return true;
             }
