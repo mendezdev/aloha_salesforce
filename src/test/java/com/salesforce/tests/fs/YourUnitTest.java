@@ -2,7 +2,6 @@ package com.salesforce.tests.fs;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,39 +45,110 @@ public class YourUnitTest extends BaseTest {
 
     @Test
     public void testCreateDirectoryButAlreadyExists() {
-        List<String> expectedResult = getExpectedResults("Directory already exists");
+        List<String> expectedResult = getExpectedResults("Element already exists");
 
         runTest(toArray(expectedResult),
                 "mkdir new_directory", "mkdir new_directory", "quit");
     }
 
     @Test
-    public void testCreateDirectoryButInvalidParameterName() {
+    public void testCreateDirectoryButInvalidParameter() {
         List<String> expectedResult = getExpectedResults("Invalid Command");
 
         runTest(toArray(expectedResult),
                 "mkdir", "quit");
     }
 
-    // helpers
-    private List<String> getExpectedResults(String... values) {
-        List<String> list = new ArrayList<String>();
-        for (String s : values) {
-            list.add(s + "\n");
-        }
-        return list;
+    // CD COMMAND
+    @Test
+    public void testChangeValidDirectory() {
+        List<String> expectedResults = getExpectedResults("/first_directory", "/first_directory/second_directory");
+        runTest(toArray(expectedResults),
+                "mkdir first_directory",
+                "cd first_directory",
+                "mkdir second_directory",
+                "ls",
+                "quit");
     }
 
-    private String[] toArray(List<String> list) {
-        return list.toArray(new String[0]);
+    @Test
+    public void testChangeBackwardDirectory() {
+        List<String> expectedResults = getExpectedResults(
+                "/first_directory",
+                "/first_directory/second_directory",
+                "/root",
+                "/root/first_directory",
+                "/root/first_directory/second_directory");
+        runTest(toArray(expectedResults),
+                "mkdir first_directory",
+                "cd first_directory",
+                "mkdir second_directory",
+                "ls",
+                "cd ..",
+                "ls",
+                "quit");
     }
 
-    private String getInvalidLengthName() {
-        int capacity = 100;
-        StringBuilder builder = new StringBuilder(capacity);
-        for (int i = 0; i <= capacity; i++) {
-            builder.append("x");
-        }
-        return builder.toString();
+    @Test
+    public void testChangeDirectoryNotFound() {
+        List<String> expectedResults = getExpectedResults("Directory not found");
+        runTest(toArray(expectedResults),
+                "cd new_dir",
+                "quit");
+    }
+
+    // TOUCH COMMAND
+    @Test
+    public void testCreateValidFile() {
+        List<String> expectedResults = getExpectedResults("/root", "/root/example.txt");
+        runTest(toArray(expectedResults),
+                "touch example.txt",
+                "ls",
+                "quit");
+    }
+
+    @Test
+    public void testCreateFileInvalidLengthName() {
+        List<String> expectedResults = getExpectedResults("Invalid length for naming");
+        runTest(toArray(expectedResults),
+                "touch " + getInvalidLengthName(),
+                "quit");
+    }
+
+    // LS COMMAND
+    @Test
+    public void testListContentCommand() {
+        List<String> expectedResults = getExpectedResults(
+                "/root",
+                "/root/example1.txt",
+                "/root/example2.txt",
+                "/root/first_dir",
+                "/root/first_dir/example1.txt",
+                "/root/first_dir/example2.txt",
+                "/root/first_dir/second_dir",
+                "/root/first_dir/second_dir/example1.txt",
+                "/root/first_dir/second_dir/example2.txt",
+                "/second_dir",
+                "/second_dir/example1.txt",
+                "/second_dir/example2.txt"
+        );
+        runTest(toArray(expectedResults),
+                "mkdir first_dir",
+                "touch example1.txt",
+                "touch example2.txt",
+                "cd first_dir",
+                "touch example1.txt",
+                "touch example2.txt",
+                "mkdir second_dir",
+                "cd second_dir",
+                "touch example1.txt",
+                "touch example2.txt",
+                "cd ..",
+                "cd ..",
+                "ls",
+                "cd first_dir",
+                "cd second_dir",
+                "ls",
+                "quit");
     }
 }
