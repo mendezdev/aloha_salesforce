@@ -26,7 +26,7 @@ public class YourUnitTest extends BaseTest {
     @Test
     public void testCreateValidDirectoryAndSubDirectories() {
         List<String> expectedResults = getExpectedResults(
-                "/root/new_directory/new_directory_lvl2", "/root/new_directory");
+                "/new_directory", "/new_directory/new_directory_lvl2");
 
         runTest(toArray(expectedResults),
                 "mkdir new_directory",
