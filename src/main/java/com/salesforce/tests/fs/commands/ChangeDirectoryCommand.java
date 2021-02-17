@@ -1,5 +1,6 @@
 package com.salesforce.tests.fs.commands;
 
+import com.salesforce.tests.fs.domain.Directory;
 import com.salesforce.tests.fs.domain.Disk;
 
 public class ChangeDirectoryCommand extends DirectoryCommand {
@@ -30,7 +31,11 @@ public class ChangeDirectoryCommand extends DirectoryCommand {
     }
 
     private boolean existDirectory(String dirName) {
-        String fullPath = disk.getPath() + "/" + dirName;
-        return disk.getDirectory().containsKey(fullPath);
+        for (Directory d : disk.getCurrentDirectory().getDirectories()) {
+            if (d.getName().equals(dirName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
