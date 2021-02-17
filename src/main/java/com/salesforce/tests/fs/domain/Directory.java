@@ -5,17 +5,19 @@ import java.util.List;
 
 public class Directory extends BaseDir {
     private List<File> files;
+    private List<Directory> directories;
 
-    public Directory(String name) {
-        super(name);
+    public Directory(String path, String name) {
+        super(path, name);
         this.files = new ArrayList<File>();
+        this.directories = new ArrayList<Directory>();
+    }
+
+    public List<Directory> getDirectories() {
+        return directories;
     }
 
     public List<File> getFiles() {
         return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
     }
 }

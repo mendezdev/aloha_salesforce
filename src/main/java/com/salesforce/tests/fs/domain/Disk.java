@@ -1,16 +1,14 @@
 package com.salesforce.tests.fs.domain;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class Disk {
     private String path;
-    private Map<String, Directory> directory;
+    private Directory directory;
 
     public Disk() {
         this.path = "/root";
-        this.directory = new HashMap<String, Directory>();
-        this.directory.put("/root", new Directory("root"));
+        this.directory = new Directory("/root", "root");
     }
 
     public String getPath() {
@@ -21,7 +19,37 @@ public class Disk {
         this.path = path;
     }
 
-    public Map<String, Directory> getDirectory() {
+    public Directory getDirectory() {
         return directory;
+    }
+
+    public Directory getCurrentDirectory() {
+        return getRecursiveDirectory(this.directory, this.path, this.directory.getName());
+    }
+
+    private Directory getRecursiveDirectory(Directory directory, String path, String dirName) {
+        String[] paths = path.split("/");
+        List<Directory> directories = directory.getDirectories();
+        Directory directoryFound = null;
+        if (paths.length == 2) {
+            return directory;
+        } else {
+            for (Directory d : directories) {
+                if (d.getName().equals(paths[2])) {
+                    directoryFound = d;
+                    break;
+                }
+            }
+
+            if (directoryFound != null) {
+                String refinedPath = "";
+                for (int i = 2; i < paths.length; i++) {
+                    refinedPath = refinedPath + "/" + paths[i];
+                }
+                return getRecursiveDirectory(directoryFound, refinedPath, dirName);
+            } else {
+                return directoryFound;
+            }
+        }
     }
 }

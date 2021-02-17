@@ -1,13 +1,11 @@
 package com.salesforce.tests.fs.domain;
 
 public abstract class BaseDir {
+    protected String path;
     protected String name;
 
-    public BaseDir(String name) {
-        this.name = name;
-    }
-
-    public void setName(String name) {
+    public BaseDir(String path, String name) {
+        this.path = path;
         this.name = name;
     }
 
