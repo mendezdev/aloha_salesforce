@@ -19,10 +19,6 @@ public class Disk {
         this.path = path;
     }
 
-    public Directory getDirectory() {
-        return directory;
-    }
-
     public Directory getCurrentDirectory() {
         return getRecursiveDirectory(this.directory, this.path, this.directory.getName());
     }

@@ -4,9 +4,7 @@ import com.salesforce.tests.fs.commons.CreationUtils;
 import com.salesforce.tests.fs.domain.BaseDir;
 import com.salesforce.tests.fs.domain.Directory;
 import com.salesforce.tests.fs.domain.Disk;
-import com.salesforce.tests.fs.exceptions.ExistingElementException;
-import com.salesforce.tests.fs.exceptions.InvalidParameterException;
-import com.salesforce.tests.fs.exceptions.NameLengthException;
+import com.salesforce.tests.fs.exceptions.CommandProcessorException;
 
 import java.util.ArrayList;
 
@@ -19,7 +17,7 @@ public class CreateDirectoryCommand extends DirectoryCommand {
     }
 
     @Override
-    public void execute() throws ExistingElementException, InvalidParameterException, NameLengthException {
+    public void execute() throws CommandProcessorException {
         Directory currentDir = disk.getCurrentDirectory();
         CreationUtils.validate(
                 new ArrayList<BaseDir>(currentDir.getDirectories()),

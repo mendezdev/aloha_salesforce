@@ -4,9 +4,6 @@ import com.salesforce.tests.fs.commands.*;
 import com.salesforce.tests.fs.domain.Disk;
 import com.salesforce.tests.fs.engine.DirectoryInvoker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 import static com.salesforce.tests.fs.constants.Commands.*;
@@ -25,7 +22,6 @@ public class Main {
         DirectoryInvoker invoker = new DirectoryInvoker();
 
         while (scanner.hasNext()) {
-            boolean isExecutable = true;
             String[] input = getInput(scanner.nextLine());
             String command = input[0];
             String parameter = null;
@@ -45,18 +41,14 @@ public class Main {
                 invoker.setCommand(new ChangeDirectoryCommand(disk, parameter));
             } else if (QUIT.equals(command)){
                 break;
-            }
-            else {
-                isExecutable = false;
-                System.out.println("Unrecognized command");
+            } else {
+                invoker.setCommand(new UnknownCommand(disk));
             }
 
-            if (isExecutable) {
-                try {
-                    invoker.executeCommand();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+            try {
+                invoker.executeCommand();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
 

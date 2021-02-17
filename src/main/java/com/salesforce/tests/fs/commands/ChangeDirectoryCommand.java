@@ -2,7 +2,7 @@ package com.salesforce.tests.fs.commands;
 
 import com.salesforce.tests.fs.domain.Directory;
 import com.salesforce.tests.fs.domain.Disk;
-import com.salesforce.tests.fs.exceptions.DirectoryNotFoundException;
+import com.salesforce.tests.fs.exceptions.CommandProcessorException;
 
 public class ChangeDirectoryCommand extends DirectoryCommand {
     private String dirName;
@@ -13,7 +13,7 @@ public class ChangeDirectoryCommand extends DirectoryCommand {
     }
 
     @Override
-    public void execute() throws DirectoryNotFoundException {
+    public void execute() throws CommandProcessorException {
         if ("..".equals(dirName)) {
             if (!"/root".equals(disk.getPath())) {
                 int lasIndex = disk.getPath().lastIndexOf("/");
@@ -25,7 +25,7 @@ public class ChangeDirectoryCommand extends DirectoryCommand {
             if (existDirectory(dirName)) {
                 disk.setPath(fullPath);
             } else {
-                throw new DirectoryNotFoundException("Directory not found");
+                throw new CommandProcessorException("Directory not found");
             }
         }
     }
